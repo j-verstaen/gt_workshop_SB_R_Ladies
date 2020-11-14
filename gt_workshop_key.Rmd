@@ -1,0 +1,272 @@
+---
+title: '{gt} package workshop'
+author: "Juliette Verstaen"
+date: "Novemeber 18, 2020"
+output: html_document
+---
+
+# About: 
+
+**Welcome!**
+
+In this workshop we will go over the basics of the {gt} package using FiveThirtyEight Thanksgiving Dinner or Transgender Day of Remembrance (TDoR) survey [data](https://github.com/rfordatascience/tidytuesday/tree/master/data/2018/2018-11-20). This workshop is just a sample of the things that can be done with the {gt} package. For a full list of functions and how to use them I recommend this [R Studio info webpage](https://gt.rstudio.com/index.html), which is surprisingly helpful. The 'Reference' tab has a full list of functions.
+
+Any questions, comments, or concerns please feel free to contact me at verstaen@nceas.ucsb.edu.
+
+
+```{r setup, include=FALSE}
+ 
+knitr::opts_chunk$set(echo = TRUE)
+ 
+library(tidyverse) 
+library(here)
+
+## read in the wrangled data 
+thanksgiving_pie <- read_csv(here("data/thanksgiving_pie.csv"))
+ 
+```
+
+
+## Step 1: Turn the df into a table with just one line!
+```{r basic table}
+
+thanksgiving_pie %>% 
+  gt() 
+
+```
+
+## Step 2. Add in a title and subtitle
+```{r titles and subtitles}
+
+thanksgiving_pie %>% 
+  gt() 
+
+  tab_header(title = "What pies do we eat at Thanksgiving?",
+             subtitle = "may the slice be with you")
+  
+## we can bold or italicize directly into the titles using md(). one "*" sandwiching a word or phrase will italicize, and two "**" will bold
+  
+  thanksgiving_pie %>% 
+  gt() 
+
+  tab_header(title = md("What pies do we eat at **Thanksgiving**?"),
+             subtitle = md("*may the slice be with you*"))
+  
+```
+
+## Step 3: Captions and footnotes
+```{r captions and footnotes}
+
+thanksgiving_pie %>% 
+  gt() 
+  tab_header(title = "What pies do we eat at Thanksgiving?",
+             subtitle = md("*may the slice be with you*")) %>% 
+    
+  tab_source_note(source_note = "Source: FiveThirtyEight survey from 2015",
+                  source_note = "Table created 11/18/20 for R-Ladies SB")  
+
+## maybe we want to pull out specific cells, or columns with a footnote  
+
+thanksgiving_pie %>% 
+  gt() %>% 
+  tab_header(title = "What pies do we eat at Thanksgiving?",
+             subtitle = md("*may the slice be with you*")) %>% 
+    
+  tab_footnote(footnote = ("Source: FiveThirtyEight"),
+    locations = cells_column_labels(columns = vars(survey_counts, survey_percent))) 
+  
+```
+
+## Step 4. Rearrange columns, create column banners, rename columns, and align
+
+There is much more you can do in regards to formating the table/ columns to fit your needs. I highly recommend checking out XX (the official gt r studio thing) to see what options are avaliable to you.
+
+```{r column formating}
+
+thanksgiving_pie %>% 
+  gt() %>% 
+  tab_header(title = "What pies do we eat at Thanksgiving?",
+             subtitle = md("*may the slice be with you*")) %>% 
+  tab_source_note(source_note = "Table created 11/18/20 for R-Ladies SB") %>% 
+  tab_footnote(footnote = ("Source: FiveThirtyEight"),
+    locations = cells_column_labels(columns = vars(survey_counts, survey_percent))) %>% 
+  
+  ## move columns round 
+  cols_move(columns = "survey_percent", after = "survey_counts") %>% 
+  
+  ## add in banners
+  tab_spanner(label = "FiveThirtyEight",
+              columns = vars(survey_counts, survey_percent)) %>% 
+  tab_spanner(label = "R-Ladies SB",
+              columns = vars(r_ladies_count, r_percent)) %>% 
+  
+  ## rename columns
+  
+  cols_label(survey_counts = "Counts", 
+             r_ladies_count = "Counts",
+             survey_percent = "Percent",
+             r_percent = "Percent",
+             flavor = "Flavor",
+             type = "Type")  %>% 
+  
+  cols_align("center")
+
+  ## NOTE: even once you have changed the column labels, that column name in the df is still the original name. So, when using functions that refer to the columns moving forward, we will still need to refer to the original column labels. This is kind of nice becuase it gives you freedom in regards to labeling
+  
+  
+```
+
+## Step 5: Formating data in columns
+There are a lot of data formatting functions to apply to columns in the {gt} package. You can directly format percentages, dates, time, currency, scientific notation, numbers, etc. All these functions start with "fmt_". 
+
+```{r data formating}
+
+thanksgiving_pie %>% 
+  gt() %>% 
+  tab_header(title = "What pies do we eat at Thanksgiving?",
+             subtitle = md("*may the slice be with you*")) %>% 
+  tab_source_note(source_note = "Table created 11/18/20 for R-Ladies SB") %>% 
+  tab_footnote(footnote = ("Source: FiveThirtyEight"),
+    locations = cells_column_labels(columns = vars(survey_counts, survey_percent))) %>% 
+  cols_move(columns = "survey_percent", after = "survey_counts") %>% 
+  tab_spanner(label = "FiveThirtyEight",
+              columns = vars(survey_counts, survey_percent)) %>% 
+  tab_spanner(label = "R-Ladies SB",
+              columns = vars(r_ladies_count, r_percent)) %>% 
+  cols_label(survey_counts = "Counts", 
+             r_ladies_count = "Counts",
+             survey_percent = "Percent",
+             r_percent = "Percent",
+             flavor = "Flavor",
+             type = "Type")  %>% 
+  cols_align("center") %>% 
+  
+  fmt_percent(columns = vars(survey_percent, r_percent),
+              decimals = 2) 
+
+## Lets organize the rows in descending order for survery_percentage. Remember, to create a gt table we start with a regular data frame that can be wrangles anyway we want before using gt() to convert it into a table. Here we will arrange the df before making it ito a table
+
+
+thanksgiving_pie %>% 
+  
+  dplyr::arrange(desc(survey_percent)) %>% 
+
+  gt() %>% 
+  tab_header(title = "What pies do we eat at Thanksgiving?",
+             subtitle = md("*may the slice be with you*")) %>% 
+  tab_source_note(source_note = "Table created 11/18/20 for R-Ladies SB") %>% 
+  tab_footnote(footnote = ("Source: FiveThirtyEight"),
+    locations = cells_column_labels(columns = vars(survey_counts, survey_percent))) %>% 
+  cols_move(columns = "survey_percent", after = "survey_counts") %>% 
+  tab_spanner(label = "FiveThirtyEight",
+              columns = vars(survey_counts, survey_percent)) %>% 
+  tab_spanner(label = "R-Ladies SB",
+              columns = vars(r_ladies_count, r_percent)) %>% 
+  cols_label(survey_counts = "Counts", 
+             r_ladies_count = "Counts",
+             survey_percent = "Percent",
+             r_percent = "Percent",
+             flavor = "Flavor",
+             type = "Type")  %>% 
+  cols_align("center") %>% 
+  fmt_percent(columns = vars(survey_percent, r_percent),
+              decimals = 2) 
+
+  
+```
+
+## Step 6: Using colors in your table
+
+
+```{r colors}
+
+## these are the colors I know I'll want to use; you can also use ggplot colors or palleteer pallets directly! Amazing!
+
+orange <- "#F7B060"
+tan <- "#E2D0B8"
+blue <- "#C1DDCE"
+
+thanksgiving_pie %>% 
+  dplyr::arrange(desc(survey_percent)) %>%  
+  gt(rowname_col = "flavor") %>% 
+  tab_header(title = "What pies do we eat at Thanksgiving?",
+             subtitle = md("*may the slice be with you*")) %>% 
+  tab_source_note(source_note = "Table created 11/18/20 for R-Ladies SB") %>% 
+  tab_footnote(footnote = ("Source: FiveThirtyEight"),
+    locations = cells_column_labels(columns = vars(survey_counts, survey_percent))) %>% 
+  cols_move(columns = "survey_percent", after = "survey_counts") %>% 
+  tab_spanner(label = "FiveThirtyEight",
+              columns = vars(survey_counts, survey_percent)) %>% 
+  tab_spanner(label = "R-Ladies SB",
+              columns = vars(r_ladies_count, r_percent)) %>% 
+  cols_label(survey_counts = "Counts", 
+             r_ladies_count = "Counts",
+             survey_percent = "Percent",
+             r_percent = "Percent",
+             flavor = "Flavor",
+             type = "Type")  %>% 
+  cols_align("center") %>% 
+  fmt_percent(columns = vars(survey_percent, r_percent),
+              decimals = 2) %>% 
+  
+  ## Lets say we really want to highlight the differences in counts for each pie flavor. We will need to make sure column values are numeric if they should be but they aren't you can reformat it with fmt_numeric()
+  
+    data_color(columns = vars(r_ladies_count, survey_counts), ## can do this for 1 or more columns
+    colors = scales::col_numeric(palette = c(blue, tan, orange), # A color scheme (gradient)
+       domain = c(0, 740))) %>% 
+  
+  ## what if we wanted to highlight the pies that are fruit types
+     tab_style(
+       style = cell_fill(color = orange),
+       locations = cells_body( rows = type == "fruit")) 
+
+  
+```
+
+
+## Step 7: gt will keep grouping varibales and facet accordingly
+
+```{r grouping and faceting}
+
+thanksgiving_pie %>% 
+  dplyr::arrange(desc(survey_percent)) %>%  
+  
+  group_by(type) %>% 
+  
+  gt(rowname_col = "flavor") %>% 
+  tab_header(title = "What pies do we eat at Thanksgiving?",
+             subtitle = md("*may the slice be with you*")) %>% 
+  tab_source_note(source_note = "Table created 11/18/20 for R-Ladies SB") %>% 
+  tab_footnote(footnote = ("Source: FiveThirtyEight"),
+    locations = cells_column_labels(columns = vars(survey_counts, survey_percent))) %>% 
+  cols_move(columns = "survey_percent", after = "survey_counts") %>% 
+  tab_spanner(label = "FiveThirtyEight",
+              columns = vars(survey_counts, survey_percent)) %>% 
+  tab_spanner(label = "R-Ladies SB",
+              columns = vars(r_ladies_count, r_percent)) %>% 
+  cols_label(survey_counts = "Counts", 
+             r_ladies_count = "Counts",
+             survey_percent = "Percent",
+             r_percent = "Percent",
+             flavor = "Flavor",
+             type = "Type")  %>% 
+  cols_align("center") %>%
+  fmt_percent(columns = vars(survey_percent, r_percent),
+              decimals = 2) %>% 
+     tab_style(
+       style = cell_fill(color = orange),
+       locations = cells_body(rows = type == "fruit")) 
+
+```
+
+
+# Other cool stuff:
+
+* summary_rows() will calcualte a row of wahtaver specificied summary statistis. requires some setting up of identifying grouped variables.
+
+* You can use emojis in your tables!! It's super easy https://github.com/hadley/emo
+
+* {palleteer} package can be used directly in the gt function to grab awesome colors
+
+* You can save your creation with great resolution using gtsave! For some reason figuring this out involved weird trouble shooting for me and I had to download {webshot} and then run this line once [webshot::install_phantomjs()] before I was able to save.
+
