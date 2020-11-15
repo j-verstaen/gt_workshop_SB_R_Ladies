@@ -16,22 +16,20 @@ Any questions, comments, or concerns please feel free to contact me at verstaen@
 ## Set up: libraries and read in data
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-
+ 
 ## libraries
-library(tidyverse) 
-library(here)
+
 
 ## read in the wrangled data 
-thanksgiving_pie <- read_csv(here("data/thanksgiving_pie.csv"))
  
+
 ```
 
 
 ## Step 1: Turn the df into a table with just one line!
 ```{r basic table}
 
-thanksgiving_pie %>% 
-  gt() 
+
 
 ```
 
@@ -40,42 +38,34 @@ thanksgiving_pie %>%
 
 ## add a title and subtitle  
 thanksgiving_pie %>% 
-  gt() 
+  gt() %>% 
 
-  tab_header(title = "What pies do we eat at Thanksgiving?",
-             subtitle = "may the slice be with you")
   
+
 ## we can bold or italicize directly into the titles using md(). one "*" sandwiching a word or phrase will italicize, and two "**" will bold
+thanksgiving_pie %>% 
+  gt() %>% 
   
-  thanksgiving_pie %>% 
-  gt() 
 
-  tab_header(title = md("What pies do we eat at **Thanksgiving**?"),
-             subtitle = md("*may the slice be with you*"))
-  
+ 
 ```
 
 ## Step 3: Captions and footnotes
 ```{r captions and footnotes}
 
+## create captions/notes for entire table
 thanksgiving_pie %>% 
   gt() 
   tab_header(title = "What pies do we eat at Thanksgiving?",
              subtitle = md("*may the slice be with you*")) %>% 
     
-  tab_source_note(source_note = "Source: FiveThirtyEight survey from 2015",
-                  source_note = "Table created 11/18/20 for R-Ladies SB")  
 
 ## maybe we want to pull out specific cells, or columns with a footnote  
-
 thanksgiving_pie %>% 
   gt() %>% 
   tab_header(title = "What pies do we eat at Thanksgiving?",
              subtitle = md("*may the slice be with you*")) %>% 
     
-  tab_footnote(footnote = ("Source: FiveThirtyEight"),
-    locations = cells_column_labels(columns = vars(survey_counts, survey_percent))) 
-  
 ```
 
 ## Step 4. Rearrange columns, create column banners, rename columns, and align
@@ -93,25 +83,13 @@ thanksgiving_pie %>%
     locations = cells_column_labels(columns = vars(survey_counts, survey_percent))) %>% 
   
   ## move columns around 
-  cols_move(columns = "survey_percent", after = "survey_counts") %>% 
   
   ## add in banners
-  tab_spanner(label = "FiveThirtyEight",
-              columns = vars(survey_counts, survey_percent)) %>% 
-  tab_spanner(label = "R-Ladies SB",
-              columns = vars(r_ladies_count, r_percent)) %>% 
   
   ## rename columns
   
-  cols_label(survey_counts = "Counts", 
-             r_ladies_count = "Counts",
-             survey_percent = "Percent",
-             r_percent = "Percent",
-             flavor = "Flavor",
-             type = "Type")  %>% 
-  
   ## align columns
-  cols_align("center")
+  
   
 ```
 *NOTE*: Even once you have changed the column labels, that column name in the df is still the original name. So, when using functions that refer to the columns moving forward, we will still need to refer to the original column labels. This is kind of nice because it gives you freedom in regards to labeling.
@@ -142,17 +120,19 @@ thanksgiving_pie %>%
              type = "Type")  %>% 
   cols_align("center") %>% 
   
-  fmt_percent(columns = vars(survey_percent, r_percent),
-              decimals = 2) 
+  ## format the percent
+
+  
 ```
 
 Lets organize the rows in descending order for survey_percentage. Remember, to create a gt table we start with a regular data frame that can be wrangled anyway we want before using gt() to convert it into a table. Here we will arrange the df before using gt()
+
 ```{r arranging row order}
 
 thanksgiving_pie %>% 
   
   ## arrange row order
-  dplyr::arrange(desc(survey_percent)) %>% 
+
 
   gt() %>% 
   tab_header(title = "What pies do we eat at Thanksgiving?",
@@ -176,6 +156,7 @@ thanksgiving_pie %>%
               decimals = 2) 
 
 ```
+
 
 ## Step 6: Using colors in your table
 
@@ -213,15 +194,9 @@ thanksgiving_pie %>%
               decimals = 2) %>% 
   
   ## highlighting differences in the quantitative data 
-  
-    data_color(columns = vars(r_ladies_count, survey_counts), ## can do this for 1 or more columns
-    colors = scales::col_numeric(palette = c(blue, tan, orange), # variables need to be numeric, color scheme will be a gradient
-       domain = c(0, 740))) %>%  ## need to specify end points
+ 
   
   ## what if we wanted to highlight the pies that are fruit types
-     tab_style(
-       style = cell_fill(color = orange),
-       locations = cells_body( rows = type == "fruit")) 
 
   
 ```
@@ -234,8 +209,8 @@ thanksgiving_pie %>%
 thanksgiving_pie %>% 
   dplyr::arrange(desc(survey_percent)) %>%  
   
-   ## specify grouping variable
-  group_by(type) %>% 
+  ## specify grouping variable
+
   
   gt(rowname_col = "flavor") %>% 
   tab_header(title = "What pies do we eat at Thanksgiving?",
