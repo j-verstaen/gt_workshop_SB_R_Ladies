@@ -20,6 +20,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## libraries
 library(tidyverse) 
 library(here)
+library(gt)
 
 ## read in the wrangled data 
 thanksgiving_pie <- read_csv(here("data/thanksgiving_pie.csv"))
@@ -40,7 +41,7 @@ thanksgiving_pie %>%
 
 ## add a title and subtitle  
 thanksgiving_pie %>% 
-  gt() 
+  gt() %>% 
 
   tab_header(title = "What pies do we eat at Thanksgiving?",
              subtitle = "may the slice be with you")
@@ -48,7 +49,7 @@ thanksgiving_pie %>%
 ## we can bold or italicize directly into the titles using md(). one "*" sandwiching a word or phrase will italicize, and two "**" will bold
   
   thanksgiving_pie %>% 
-  gt() 
+  gt() %>% 
 
   tab_header(title = md("What pies do we eat at **Thanksgiving**?"),
              subtitle = md("*may the slice be with you*"))
@@ -59,12 +60,11 @@ thanksgiving_pie %>%
 ```{r captions and footnotes}
 
 thanksgiving_pie %>% 
-  gt() 
+  gt() %>% 
   tab_header(title = "What pies do we eat at Thanksgiving?",
              subtitle = md("*may the slice be with you*")) %>% 
     
-  tab_source_note(source_note = "Source: FiveThirtyEight survey from 2015",
-                  source_note = "Table created 11/18/20 for R-Ladies SB")  
+  tab_source_note(source_note = "Source: FiveThirtyEight survey from 2015")  
 
 ## maybe we want to pull out specific cells, or columns with a footnote  
 
@@ -227,7 +227,7 @@ thanksgiving_pie %>%
 ```
 
 
-## Step 7: gt will keep grouping varibales and facet accordingly
+## Step 7: gt will keep grouping variables and facet accordingly
 
 ```{r grouping and faceting}
 
