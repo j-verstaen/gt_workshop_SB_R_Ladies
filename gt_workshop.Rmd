@@ -111,9 +111,9 @@ thanksgiving_pie %>%
   tab_spanner(label = "FiveThirtyEight",
               columns = vars(survey_counts, survey_percent)) %>% 
   tab_spanner(label = "R-Ladies SB",
-              columns = vars(r_ladies_count, r_percent)) %>% 
+              columns = vars(r_ladies_counts, r_percent)) %>% 
   cols_label(survey_counts = "Counts", 
-             r_ladies_count = "Counts",
+             r_ladies_counts = "Counts",
              survey_percent = "Percent",
              r_percent = "Percent",
              flavor = "Flavor",
@@ -144,9 +144,9 @@ thanksgiving_pie %>%
   tab_spanner(label = "FiveThirtyEight",
               columns = vars(survey_counts, survey_percent)) %>% 
   tab_spanner(label = "R-Ladies SB",
-              columns = vars(r_ladies_count, r_percent)) %>% 
+              columns = vars(r_ladies_counts, r_percent)) %>% 
   cols_label(survey_counts = "Counts", 
-             r_ladies_count = "Counts",
+             r_ladies_counts = "Counts",
              survey_percent = "Percent",
              r_percent = "Percent",
              flavor = "Flavor",
@@ -182,9 +182,9 @@ thanksgiving_pie %>%
   tab_spanner(label = "FiveThirtyEight",
               columns = vars(survey_counts, survey_percent)) %>% 
   tab_spanner(label = "R-Ladies SB",
-              columns = vars(r_ladies_count, r_percent)) %>% 
+              columns = vars(r_ladies_counts, r_percent)) %>% 
   cols_label(survey_counts = "Counts", 
-             r_ladies_count = "Counts",
+             r_ladies_counts = "Counts",
              survey_percent = "Percent",
              r_percent = "Percent",
              flavor = "Flavor",
@@ -224,9 +224,9 @@ thanksgiving_pie %>%
   tab_spanner(label = "FiveThirtyEight",
               columns = vars(survey_counts, survey_percent)) %>% 
   tab_spanner(label = "R-Ladies SB",
-              columns = vars(r_ladies_count, r_percent)) %>% 
+              columns = vars(r_ladies_counts, r_percent)) %>% 
   cols_label(survey_counts = "Counts", 
-             r_ladies_count = "Counts",
+             r_ladies_counts = "Counts",
              survey_percent = "Percent",
              r_percent = "Percent",
              flavor = "Flavor",
@@ -235,7 +235,7 @@ thanksgiving_pie %>%
   fmt_percent(columns = vars(survey_percent, r_percent),
               decimals = 2) %>% 
 
-  data_color(columns = vars(r_ladies_count, survey_counts),
+  data_color(columns = vars(r_ladies_counts, survey_counts),
               colors = scales::col_numeric(palette = c(blue, tan, orange),
                                            domain = c(5, 730))) %>% 
   
