@@ -172,7 +172,7 @@ Lets say we really want to highlight the differences in counts for each pie flav
 
 thanksgiving_pie %>% 
   dplyr::arrange(desc(survey_percent)) %>%  
-  gt(rowname_col = "flavor") %>% 
+  gt() %>% 
   tab_header(title = "What pies do we eat at Thanksgiving?",
              subtitle = md("*may the slice be with you*")) %>% 
   tab_source_note(source_note = "Table created 11/18/20 for R-Ladies SB") %>% 
@@ -202,17 +202,19 @@ thanksgiving_pie %>%
 ```
 
 
-## Step 7: gt will keep grouping varibales and facet accordingly
+## Step 7: Grouping and summary stats
+
+Grouping can be done a couple ways in a gt table object: tab_row_group(), group_by() in dplyr, or specifying group in the gt() call
 
 ```{r grouping and faceting}
 
 thanksgiving_pie %>% 
   dplyr::arrange(desc(survey_percent)) %>%  
   
-  ## specify grouping variable
+  ## specify grouping variable and column
 
+  gt(    ) %>% 
   
-  gt(rowname_col = "flavor") %>% 
   tab_header(title = "What pies do we eat at Thanksgiving?",
              subtitle = md("*may the slice be with you*")) %>% 
   tab_source_note(source_note = "Table created 11/18/20 for R-Ladies SB") %>% 
@@ -232,16 +234,21 @@ thanksgiving_pie %>%
   cols_align("center") %>%
   fmt_percent(columns = vars(survey_percent, r_percent),
               decimals = 2) %>% 
-     tab_style(
-       style = cell_fill(color = orange),
-       locations = cells_body(rows = type == "fruit")) 
+
+  data_color(columns = vars(r_ladies_count, survey_counts),
+              colors = scales::col_numeric(palette = c(blue, tan, orange),
+                                           domain = c(5, 730))) %>% 
+  
+    ## calculate summary statistics
+
+
 
 ```
 
 
 # Other cool stuff:
 
-* summary_rows() will calculate a row of whatever specified summary statistics. requires some setting up of identifying grouped variables.
+* giving the stub head a label (tab_stubhead()), and relabeling row names and such 
 
 * You can use emojis in your tables!! It's super easy https://github.com/hadley/emo
 
