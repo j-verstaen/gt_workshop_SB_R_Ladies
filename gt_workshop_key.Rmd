@@ -201,9 +201,9 @@ thanksgiving_pie %>%
   tab_spanner(label = "FiveThirtyEight",
               columns = vars(survey_counts, survey_percent)) %>% 
   tab_spanner(label = "R-Ladies SB",
-              columns = vars(r_ladies_countss, r_percent)) %>% 
+              columns = vars(r_ladies_counts, r_percent)) %>% 
   cols_label(survey_counts = "Counts", 
-             r_ladies_countss = "Counts",
+             r_ladies_counts = "Counts",
              survey_percent = "Percent",
              r_percent = "Percent",
              flavor = "Flavor",
@@ -214,7 +214,7 @@ thanksgiving_pie %>%
   
   ## highlighting differences in the quantitative data 
   
-    data_color(columns = vars(r_ladies_countss, survey_counts), ## can do this for 1 or more columns
+    data_color(columns = vars(r_ladies_counts, survey_counts), ## can do this for 1 or more columns
     colors = scales::col_numeric(palette = c(blue, tan, orange), # variables need to be numeric, color scheme will be a gradient
        domain = c(0, 740))) %>%  ## need to specify end points
   
@@ -248,9 +248,9 @@ thanksgiving_pie %>%
   tab_spanner(label = "FiveThirtyEight",
               columns = vars(survey_counts, survey_percent)) %>% 
   tab_spanner(label = "R-Ladies SB",
-              columns = vars(r_ladies_countss, r_percent)) %>% 
+              columns = vars(r_ladies_counts, r_percent)) %>% 
   cols_label(survey_counts = "Counts", 
-             r_ladies_countss = "Counts",
+             r_ladies_counts = "Counts",
              survey_percent = "Percent",
              r_percent = "Percent",
              flavor = "Flavor",

@@ -87,6 +87,7 @@ r_ladies_pies <- r_ladies_raw %>%
          r_percent = r_ladies_count/total) %>% 
   select(-total)
 
+## Combine the data
 thanksgiving_pie <- left_join(fivethirtyeight_pies, r_ladies_pies, by = "flavor") %>% 
   mutate(r_ladies_count = ifelse(is.na(r_ladies_count), 0, r_ladies_count),
          r_percent = ifelse(is.na(r_percent), 0, r_percent)) %>% 
