@@ -73,10 +73,12 @@ r_ladies_raw <- read_csv(here("data/r_ladies_survey.csv"))
 r_ladies_pies <- r_ladies_raw %>% 
   dplyr::select("What pies are eaten during your chosen Thanksgiving Day holiday? (Check all that apply)") %>% 
   rename(pie_selections = "What pies are eaten during your chosen Thanksgiving Day holiday? (Check all that apply)") %>% 
+  filter(!is.na(pie_selections)) %>% 
   mutate(flavor = strsplit(pie_selections, ",")) %>%
   unnest(flavor)  %>% 
   mutate(flavor = str_trim(flavor, side = c("both"))) %>% 
   select(flavor) %>% 
+  filter(flavor != "I *wish* I was eating key lime and lemon meringue as well but my family is lame") %>% 
   count(flavor) %>% 
   mutate(flavor = ifelse(flavor %!in% pie_list, "other", flavor)) %>% 
   rename(r_ladies_count = n) %>% 
